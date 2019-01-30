@@ -142,7 +142,7 @@ func walkLocalRepositories(callback func(*LocalRepository)) {
 	for _, root := range localRepositoryRoots() {
 		godirwalk.Walk(root, &godirwalk.Options{
 			Callback: func(path string, de *godirwalk.Dirent) error {
-				if de.IsDir() == false {
+				if de.IsDir() == false && de.IsSymlink() == false {
 					return nil
 				}
 
@@ -170,6 +170,7 @@ func walkLocalRepositories(callback func(*LocalRepository)) {
 				callback(repo)
 				return filepath.SkipDir
 			},
+			FollowSymbolicLinks: true,
 		})
 	}
 }
